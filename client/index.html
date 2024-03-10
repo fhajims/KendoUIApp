@@ -40,13 +40,41 @@
                     { field: "name", title: "Name" },
                     { field: "age", title: "Age" },
                     { field: "country", title: "Country" },
-                    { title: "Action", template: "<button class='k-button my-button'>Please don´t click me</button>" }
+                    { title: "Action", template: "<button class='k-button my-button'>Please don´t click me</button>" },
+                    { title: "Edit", template: "<button class='k-button edit-button'>Please don´t click me 2</button>" }
                 ],
-                selectable: "row",
+                navigatable: true, // Enable keyboard navigation
+                editable: {
+                    mode: "incell", // Enable cell editing
+                    confirmation: false // Disable confirmation when pressing Enter key
+                },
                 change: function(e) {
                     var selectedRows = this.select();
                     var dataItem = this.dataItem(selectedRows[0]);
                     console.log("Selected Row Data:", dataItem);
+                }
+            });
+
+            $(document).on("click", ".my-button", function() {
+                // Do something when the button is clicked
+                alert("Your wonderful blue button was clicked");
+            });
+
+            $(document).on("click", ".edit-button", function() {
+                var grid = $("#grid").data("kendoGrid");
+                var dataItem = grid.dataItem($(this).closest("tr"));
+                grid.editRow($(this).closest("tr"));
+            });
+
+            // Customize Enter key behavior to move to the next column
+            $("#grid").on("keydown", "input.k-input", function(e) {
+                var keyCode = e.keyCode || e.which;
+                if (keyCode === 13) { // Enter key
+                    var closestCell = $(this).closest("td");
+                    var nextCell = closestCell.next("td");
+                    if (nextCell.length) {
+                        nextCell.click();
+                    }
                 }
             });
         });

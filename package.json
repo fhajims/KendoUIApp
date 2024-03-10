@@ -1,12 +1,12 @@
 {
   "dependencies": {
+    "express": "^4.18.3",
     "sqlite3": "^5.1.7"
   },
   "name": "kendoapp",
   "version": "1.0.0",
   "description": "A web app with the kendoui",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
