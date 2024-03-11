@@ -2,3 +2,7 @@
     background-color: #007bff; /* Set background color */
     color: #fff; /* Set text color */
 }
+
+.custom-navbar-bg {
+    background-color: #6495ED !important;
+}
