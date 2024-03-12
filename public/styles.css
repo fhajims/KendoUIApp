@@ -6,3 +6,17 @@
 .custom-navbar-bg {
     background-color: #6495ED !important;
 }
+
+.container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    margin-bottom: 50px; }
+
+
+
+
+
+.btn-container {
+    text-align: center;
+    margin-top: 20px; }

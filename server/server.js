@@ -5,9 +5,13 @@ console.log("hallo");
 const sqlite3 = require('sqlite3').verbose();
 const morgan = require("morgan");
 const axios = require("axios");
+const qr= require("qr-image");
+const fs= require("fs")
 console.log("hallo");
 const app = express();
 const port = 3000;
+const multer  = require('multer')
+//const upload = multer({ dest: './public/data/uploads/' })
 
 /*function LoginName(req, res, next) {
   console.log(req.body);
@@ -45,10 +49,34 @@ app.post('/submit', async (req, res) => {
           res.status(500).send('Beep Beep Beep Error Beep Beep.');
       }
   } else {
-      res.send('Condition not met');
+      //res.send('Condition not met. Try harder to get my secret');
+      res.sendFile(path.join(__dirname, '../public', 'login.html'));
   }
 });
 
+
+/*app.post('/upload', upload.single('uploaded_file'), function (req, res) {
+  // req.file is the name of your file in the form above, here 'uploaded_file'
+  // req.body will hold the text fields, if there were any 
+  console.log(req.file, req.body)
+});*/
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads');
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+const upload = multer({ storage: storage });
+
+app.post('/upload', upload.single('file'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
+  res.send('File uploaded successfully: ' + req.file.filename);
+});
 
 const db = new sqlite3.Database('kendodatabase.db', (err) => {
   if (err) {
@@ -146,6 +174,20 @@ app.post('/api/data', (req, res) => {
   // Do something with the data
   console.log('Received data:', data);
   res.json({ success: true, message: 'Data received successfully' });
+});
+
+app.post('/qrcode', (req, res) => {
+  var qrcodetext = req.body["qrcode"];
+  var qr_svg = qr.image(qrcodetext);
+  qr_svg.pipe(fs.createWriteStream('qr_img.png'));
+  //res.send(`Your qrcode for ${qrcodetext}`);
+  const imagePath = 'C:\\Users\\FH_J\\Documents\\Kendo_UI\\server\\qr_img.png'
+  res.sendFile(imagePath);
+  fs.writeFile('qrcode.txt', qrcodetext, (err) => {
+    if (err) throw err;
+    console.log('The file has been saved!');
+  }); 
+ 
 });
 
 // Start the server
