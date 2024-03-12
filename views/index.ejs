@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kendo UI App</title>
+    <!-- Include Kendo UI styles -->
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.1.301/styles/kendo.default-v2.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Include jQuery (required by Kendo UI) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include Kendo UI scripts -->
+    <script src="https://kendo.cdn.telerik.com/2022.1.301/js/kendo.all.min.js"></script>
+</head>
+<body>
+
+
+  <%- include("header.ejs")%>
+   
+  <h1>Today is <%= day %></h1>
+  <h2> It is now <%= hour %>  : <%= minutes %> <%= seconds %></h2>
+
+  
+    
+    <div id="grid"></div>
+    <div style = "text-align: center; margin-top: 50px;">
+        <iframe src="https://giphy.com/embed/3orifel6mApteZ5Qv6" width="480" height="362" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+        <p><a href="https://giphy.com/gifs/season-10-the-simpsons-10x19-3orifel6mApteZ5Qv6">via GIPHY</a></p>
+    </div>
+    
+    <%- include("qrcode.ejs") %>
+
+    <div> <a href = "./posts.html">Go to Posts</a> </div>
+
+    <script>
+        $(document).ready(function() {
+            // Initialize Kendo UI Grid
+            $("#grid").kendoGrid({
+                dataSource: {
+                    data: [
+                        { id: 1, name: "John Doe", age: 30,  country: "USA" },
+                        { id: 2, name: "Jane Smith", age: 25,  country: "USA" },
+                        { id: 3, name: "Bob Johnson", age: 40,  country: "USA" }
+                    ],
+                    schema: {
+                        model: {
+                            fields: {
+                                id: { type: "number" },
+                                name: { type: "string" },
+                                age: { type: "number" },
+                                country: { type: "string" }
+                            }
+                        }
+                    }
+                },
+                columns: [
+                    { field: "name", title: "Name" },
+                    { field: "age", title: "Age" },
+                    { field: "country", title: "Country" },
+                    { title: "Action", template: "<button class='k-button my-button btn btn-primary'>Please don´t click me</button>" },
+                    { title: "Edit", template: "<button class='k-button edit-button btn btn-info'>Please don´t click me 2</button>" },
+                    {template:"<form action='/upload' method='post' enctype='multipart/form-data'> <label for='file'>Select file:</label><input type='file' id='file' name='uploaded_file' accept='.txt,.pdf,.doc,.docx'><br><br><button type='submit'>Upload</button></form>"}
+                ],
+                navigatable: true, // Enable keyboard navigation
+                editable: {
+                    mode: "incell", // Enable cell editing
+                    confirmation: false // Disable confirmation when pressing Enter key
+                },
+                change: function(e) {
+                    var selectedRows = this.select();
+                    var dataItem = this.dataItem(selectedRows[0]);
+                    console.log("Selected Row Data:", dataItem);
+                }
+            });
+
+            $(document).on("click", ".my-button", function() {
+                // Do something when the button is clicked
+                alert("Your wonderful blue button was clicked");
+            });
+
+            $(document).on("click", ".edit-button", function() {
+                var grid = $("#grid").data("kendoGrid");
+                var dataItem = grid.dataItem($(this).closest("tr"));
+                grid.editRow($(this).closest("tr"));
+            });
+
+            // Customize Enter key behavior to move to the next column
+            $("#grid").on("keydown", "input.k-input", function(e) {
+                var keyCode = e.keyCode || e.which;
+                if (keyCode === 13) { // Enter key
+                    var closestCell = $(this).closest("td");
+                    var nextCell = closestCell.next("td");
+                    if (nextCell.length) {
+                        nextCell.click();
+                    }
+                }
+            });
+        });
+
+    //<div>      <iframe src="https://giphy.com/embed/3orifel6mApteZ5Qv6" width="480" height="362" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/season-10-the-simpsons-10x19-3orifel6mApteZ5Qv6">via GIPHY</a></p> </div>
+  
+
+    
+
+    </script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+</body>
+</html>

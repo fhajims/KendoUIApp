@@ -11,6 +11,14 @@ console.log("hallo");
 const app = express();
 const port = 3000;
 const multer  = require('multer')
+
+
+
+
+
+
+app.set('view engine', 'ejs');
+
 //const upload = multer({ dest: './public/data/uploads/' })
 
 /*function LoginName(req, res, next) {
@@ -50,7 +58,7 @@ app.post('/submit', async (req, res) => {
       }
   } else {
       //res.send('Condition not met. Try harder to get my secret');
-      res.sendFile(path.join(__dirname, '../public', 'login.html'));
+      res.render(path.join(__dirname, '../views', 'login.ejs'));
   }
 });
 
@@ -90,17 +98,37 @@ const db = new sqlite3.Database('kendodatabase.db', (err) => {
 app.use(bodyParser.json());
 
 // Serve static files from the 'client' folder
-app.use(express.static(path.resolve(__dirname, "..", 'public')));
+//app.use(express.static(path.resolve(__dirname, "..", 'public')));
 //app.use(express.static(staticFilesPath));
 // Routes
 
 
+app.get('/', (req, res) => {
+  
+  today = new Date();
+  day = today.getDate();
+  hour = today.getHours();
+  minutes = today.getMinutes();
+  seconds = today.getSeconds();
 
+  res.render(path.join(__dirname, '../views', 'index.ejs'),
+   {
+    day: day,
+    hour: hour,
+    minutes: minutes,
+    seconds: seconds,
+    dayType: "a weekday",
+    advice: "it´s time to work hard"})
+});
+
+
+
+/*
 app.get('/', (req, res) => {
   // Instead of sending "Hello World!", send the index.html file
   res.sendFile(path.join(__dirname, 'client', 'index.html'));
 });
-
+*/
 app.get('/posts', (req, res) => {
   console.log("hai")
   console.log(__dirname)
@@ -115,16 +143,22 @@ app.get('/secret', (req, res) => {
 
 app.get('/index', (req, res) => {
   // Instead of sending "Hello World!", send the index.html file
+  today = new Date();
+  day = today.getDate();
+  hour = today.getHours();
+  minutes = today.getMinutes();
+  seconds = today.getSeconds();
   console.log("hai")
   console.log(__dirname)
-  res.sendFile(path.join(__dirname, '../public', 'index.html'));
+  //res.sendFile(path.join(__dirname, '../public', 'index.html'));
+  res.render(path.join(__dirname, '../views', 'index.ejs'));
 });
 
 app.get('/login', (req, res) => {
   // Instead of sending "Hello World!", send the index.html file
   console.log("hai")
   console.log(__dirname)
-  res.sendFile(path.join(__dirname, '../public', 'login.html'));
+  res.render(path.join(__dirname, '../views', 'login.ejs'));
 });
 
 app.get('/users', (req, res) => {
@@ -142,14 +176,14 @@ app.get('/contact', (req, res) => {
   // Instead of sending "Hello World!", send the index.html file
   console.log("hai")
   console.log(__dirname)
-  res.sendFile(path.join(__dirname, '../public', 'contact.html'));
+  res.render(path.join(__dirname, '../views', 'contact.ejs'));
 });
 
 app.get('/about', (req, res) => {
   // Instead of sending "Hello World!", send the index.html file
   console.log("hai")
   console.log(__dirname)
-  res.sendFile(path.join(__dirname, '../public', 'about.html'));
+  res.render(path.join(__dirname, '../views', 'about.ejs'));
 });
 
 
@@ -188,6 +222,9 @@ app.post('/qrcode', (req, res) => {
   }); 
  
 });
+
+app.use(express.static(path.resolve(__dirname, "..", 'public')));
+
 
 // Start the server
 app.listen(port, () => {
