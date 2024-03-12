@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Forecast</title>
+    <link rel="stylesheet" href="weather.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <%- include("header.ejs")%>
+    <h1>Weather Forecast</h1>
+    <form id="weatherForm">
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" required>
+        <br>
+        <label for="fromDate">From:</label>
+        <input type="date" id="fromDate" name="fromDate" required>
+        <br>
+        <label for="toDate">To:</label>
+        <input type="date" id="toDate" name="toDate" required>
+        <br>
+        <button type="submit">Get Forecast</button>
+    </form>
+
+    <!-- Script to handle form submission and API request -->
+    <script>
+        document.getElementById('weatherForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Get user input
+            const location = document.getElementById('location').value;
+            const fromDate = document.getElementById('fromDate').value;
+            const toDate = document.getElementById('toDate').value;
+
+            // Perform validation if needed
+
+            // Construct API request URL (replace with your weather API endpoint)
+            const apiUrl = `https://yourweatherapi.com/forecast?location=${location}&fromDate=${fromDate}&toDate=${toDate}`;
+
+            // Make request to weather API (using fetch or XMLHttpRequest)
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Process weather forecast data and update UI
+                    console.log(data); // Example: log the data to the console
+                    // You can update the UI here with the weather forecast data
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                    // Handle errors and display an error message to the user if needed
+                });
+        });
+    </script>
+</body>
+</html>

@@ -56,7 +56,9 @@ app.post('/submit', async (req, res) => {
           console.error(error);
           res.status(500).send('Beep Beep Beep Error Beep Beep.');
       }
-  } else {
+  } 
+  
+  else {
       //res.send('Condition not met. Try harder to get my secret');
       res.render(path.join(__dirname, '../views', 'login.ejs'));
   }
@@ -103,6 +105,7 @@ app.use(bodyParser.json());
 // Routes
 
 
+
 app.get('/', (req, res) => {
   
   today = new Date();
@@ -121,7 +124,13 @@ app.get('/', (req, res) => {
     advice: "it´s time to work hard"})
 });
 
+app.get('/weather', (req, res) => {
+  res.render(path.join(__dirname, '../views', 'weather.ejs'));
+});
 
+app.get('/qrcode', (req, res) => {
+  res.render(path.join(__dirname, '../views', 'qrcodegensite.ejs'));
+});
 
 /*
 app.get('/', (req, res) => {
@@ -134,6 +143,25 @@ app.get('/posts', (req, res) => {
   console.log(__dirname)
   res.sendFile(path.join(__dirname, '../public', 'posts.html'));
 });
+
+app.get('/register', (req, res) => {
+  console.log("hai")
+  console.log(__dirname)
+  
+  res.render(path.join(__dirname, '../views', 'register.ejs'));
+});
+
+app.post('/registerattempt', (req, res) => {
+  console.log("hai")
+  console.log(__dirname)
+  if (!/^.*(?=.{8,})(?=.*\d)(?=.*[!@#$%^&*()_+|~=`{}\[\]:";'<>?,.\/]).*$/.test(req.body["password"])) {
+    res.render(path.join(__dirname, '../views', 'invalidregistration.ejs'));
+    alert("Bitte Sonderzeichen eingeben und eine Zahl")
+  } else {
+  res.render(path.join(__dirname, '../views', 'accountcreated.ejs'));}
+});
+
+
 
 app.get('/secret', (req, res) => {
   // Instead of sending "Hello World!", send the index.html file
