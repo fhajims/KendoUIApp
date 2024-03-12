@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Forecast</title>
-    <link rel="stylesheet" href="weather.css">
+    <link rel="stylesheet" href="styles.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <%- include("header.ejs")%>
     <h1>Weather Forecast</h1>
     <form id="weatherForm">
-        <label for="location">Location:</label>
-        <input type="text" id="location" name="location" required>
+        <label for="location">Locations:</label>
+        <input type="text" id="locations" name="locations" required>
         <br>
         <label for="fromDate">From:</label>
         <input type="date" id="fromDate" name="fromDate" required>
@@ -22,6 +22,55 @@
         <br>
         <button type="submit">Get Forecast</button>
     </form>
+
+    <h1>Geocoding Form</h1>
+
+<form id="geocodingForm">
+  <label for="location">Enter a location:</label>
+  <input type="text" id="location" name="location">
+  <button type="submit">Get Coordinates</button>
+</form>
+
+<div id="result"></div>
+
+<script>
+document.getElementById("geocodingForm").addEventListener("submit", function(event) {
+  event.preventDefault(); // Prevent the form from submitting normally
+  
+  var location = document.getElementById("location").value;
+  
+  // Call a function to fetch the coordinates for the entered location
+  getCoordinates(location);
+});
+
+function getCoordinates(location) {
+  // You need to use a geocoding service for this, such as Google Maps Geocoding API, OpenStreetMap Nominatim, etc.
+  // Here's a simple example using the OpenStreetMap Nominatim API
+  var apiUrl = `https://nominatim.openstreetmap.org/search?format=json&q=<${location}>`;
+  console.log(apiUrl)
+  fetch(apiUrl)
+    .then(response => response.json())
+    .then(data => {
+      if (data.length > 0) {
+        var latitude = data[0].boundingbox[0];
+        var longitude = data[0].boundingbox[1];
+        var thirdcoordinate = data[0].boundingbox[2];
+        var fourthcoordinate = data[0].boundingbox[3];
+        var addresstype = data[0].addresstype
+        var longitude = data[0].lon
+        var latitude = data[0].lat    
+        document.getElementById("result").innerHTML = "FirstCoordinate " + latitude + "<br>SecondCoordinate " + longitude + "<br>ThirdCoordinate" + thirdcoordinate + "<br>FourthCoordinate" + fourthcoordinate +"<br>Adresstype " + addresstype + "<br>Longitude " + longitude + "<br>Latitude " + latitude;
+      } else {
+        console.log("Siuuu")
+        document.getElementById("result").innerHTML = "Location not found.";
+      }
+    })
+    .catch(error => {
+      console.error("Error fetching data:", error);
+      document.getElementById("result").innerHTML = "An error occurred. Please try again later.";
+    });
+}
+</script>
 
     <!-- Script to handle form submission and API request -->
     <script>
@@ -56,6 +105,12 @@
                     // Handle errors and display an error message to the user if needed
                 });
         });
+
+        
+
     </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>

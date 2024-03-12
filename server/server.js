@@ -13,13 +13,24 @@ const port = 3000;
 const multer  = require('multer')
 
 
-
+/*
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads');
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+const upload = multer({ storage: storage });
+*/
 
 
 
 app.set('view engine', 'ejs');
 
-//const upload = multer({ dest: './public/data/uploads/' })
+const upload = multer({ dest: './public/data/uploads/' })
 
 /*function LoginName(req, res, next) {
   console.log(req.body);
@@ -65,29 +76,20 @@ app.post('/submit', async (req, res) => {
 });
 
 
-/*app.post('/upload', upload.single('uploaded_file'), function (req, res) {
+app.post('/upload', upload.single('uploaded_file'), function (req, res) {
   // req.file is the name of your file in the form above, here 'uploaded_file'
   // req.body will hold the text fields, if there were any 
   console.log(req.file, req.body)
-});*/
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './uploads');
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-  }
 });
-const upload = multer({ storage: storage });
 
-app.post('/upload', upload.single('file'), (req, res) => {
+
+/*app.post('/upload', upload.single('file'), (req, res) => {
   if (!req.file) {
     return res.status(400).send('No file uploaded.');
   }
   res.send('File uploaded successfully: ' + req.file.filename);
 });
-
+*/
 const db = new sqlite3.Database('kendodatabase.db', (err) => {
   if (err) {
       console.error('Error opening database:', err.message);

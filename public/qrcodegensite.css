@@ -1,9 +1,6 @@
-body {
+.qrcode-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+    justify-content: center; /* Center the QR code generator horizontally */
 }
 
 .qrcodecontainer {
