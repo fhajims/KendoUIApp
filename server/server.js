@@ -102,7 +102,6 @@ app.get('/', (req, res) => {
 });
 
 app.get('/posts', (req, res) => {
-  // Instead of sending "Hello World!", send the index.html file
   console.log("hai")
   console.log(__dirname)
   res.sendFile(path.join(__dirname, '../public', 'posts.html'));
