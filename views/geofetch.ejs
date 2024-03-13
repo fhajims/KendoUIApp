@@ -1,0 +1,82 @@
+<script>
+    document.getElementById("geocodingForm").addEventListener("submit", function(event) {
+      event.preventDefault(); // Prevent the form from submitting normally
+      
+      var location = document.getElementById("location").value;
+      
+      
+      // Call a function to fetch the coordinates for the entered location
+      getCoordinates(location);
+    });
+    
+    function getCoordinates(location) {
+      var apiUrl = `https://nominatim.openstreetmap.org/search?format=json&q=<${location}>`;
+      console.log(apiUrl)
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          if (data.length > 0) {
+            var latitude = data[0].boundingbox[0];
+            var longitude = data[0].boundingbox[1];
+            var thirdcoordinate = data[0].boundingbox[2];
+            var fourthcoordinate = data[0].boundingbox[3];
+            var addresstype = data[0].addresstype
+            var longitude = data[0].lon
+            var latitude = data[0].lat  
+            
+            var resultHTML = `<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Attribute</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>First Coordinate</td>
+                <td>${latitude}</td>
+            </tr>
+            <tr>
+                <td>Second Coordinate</td>
+                <td>${longitude}</td>
+            </tr>
+            <tr>
+                <td>Third Coordinate</td>
+                <td>${thirdcoordinate}</td>
+            </tr>
+            <tr>
+                <td>Fourth Coordinate</td>
+                <td>${fourthcoordinate}</td>
+            </tr>
+            <tr>
+                <td>Address Type</td>
+                <td>${addresstype}</td>
+            </tr>
+            <tr>
+                <td>Longitude</td>
+                <td>${longitude}</td>
+            </tr>
+            <tr>
+                <td>Latitude</td>
+                <td>${latitude}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+`
+
+            document.getElementById("result").innerHTML = resultHTML
+          } else {
+            console.log("Siuuu")
+            document.getElementById("result").innerHTML = "Location not found.";
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching data:", error);
+          document.getElementById("result").innerHTML = "An error occurred. Please try again later.";
+        });
+    }
+    
+    
+    </script>

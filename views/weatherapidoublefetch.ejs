@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+
+        document.getElementById("weatherForm").addEventListener("submit", function(event) {
+          event.preventDefault(); // Prevent the form from submitting normally
+          
+          var weatherLocation = document.getElementById("locations").value;
+          
+          
+          // Call a function to fetch the coordinates for the entered location
+          getCoordinatesandForecastWeather(weatherLocation);
+        });
+        
+        function getCoordinatesandForecastWeather(weatherLocation) {
+            var apiUrl = `https://nominatim.openstreetmap.org/search?format=json&q=<${weatherLocation}>`;
+            console.log(apiUrl)
+            fetch(apiUrl)
+              .then(response => response.json())
+              .then(data => {
+                if (data.length > 0) {
+                  var latitude = data[0].boundingbox[0];
+                  var longitude = data[0].boundingbox[1]; 
+                  var apiUrlWeather = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m`
+              console.log(apiUrlWeather)
+                fetch(apiUrlWeather)
+                .then(response => response.json())
+                .then(data => {
+                    if (data) {
+                    var timezone = data.timezone;
+                    var elevation = data.elevation;
+                    var windspeed = data.current.wind_speed_10m
+                    var temperature = data.current.temperature_2m;
+                    console.log(timezone)
+                    console.log(elevation)
+                    var resultHTML = `
+                    <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Attribute</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>TimeZone</td>
+                <td>${timezone}</td>
+            </tr>
+            <tr>
+                <td>Elevation</td>
+                <td>${elevation}</td>
+            </tr>
+            <tr>
+                <td>Current Wind Speed</td>
+                <td>${windspeed} km/h</td>
+            </tr>
+            <tr>
+                <td>Current Temperature</td>
+                <td>${temperature} °C</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+                    `;    
+                    document.getElementById("weatherForecastResult").innerHTML = resultHTML;
+                    } else {
+                    console.log("Siuuu")
+                    console.log(timezone)
+                    console.log(elevation)  
+                    document.getElementById("weatherForecastResult").innerHTML = "Location not found.";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching data:", error);
+                    document.getElementById("weatherForecastResult").innerHTML = "An error occurred. Please try again later.";
+                });
+                  //document.getElementById("weatherForecastResult").innerHTML = "Latitude " + latitude + "<br>Longitude" + longitude;
+                } else {
+                  console.log("Siuuu")
+                  //document.getElementById("weatherForecastResult").innerHTML = "Location not found.";
+                }
+              })
+              .catch(error => {
+                console.error("Error fetching data:", error);
+                document.getElementById("weatherForecastResult").innerHTML = "An error occurred. Please try again later.";
+              });
+            
+              
+        
+          }
+              
+              
+        
+        </script>
+</body>
+</html>
+
