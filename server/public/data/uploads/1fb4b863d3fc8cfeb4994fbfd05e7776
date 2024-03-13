@@ -1,0 +1,1 @@
+Order:= 3; Irreduc(X^2 + X + 1) mod 2 ;
