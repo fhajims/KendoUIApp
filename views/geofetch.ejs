@@ -1,4 +1,13 @@
 <script>
+    
+    
+     var latitude, longitude;
+    
+    
+    
+    
+    
+    
     document.getElementById("geocodingForm").addEventListener("submit", function(event) {
       event.preventDefault(); // Prevent the form from submitting normally
       
@@ -22,8 +31,7 @@
             var fourthcoordinate = data[0].boundingbox[3];
             var addresstype = data[0].addresstype
             var longitude = data[0].lon
-            var latitude = data[0].lat  
-            
+            var latitude = data[0].lat            
             var resultHTML = `<div class="table-responsive">
     <table class="table table-bordered table-striped">
         <thead class="thead-dark">
@@ -55,11 +63,21 @@
             </tr>
             <tr>
                 <td>Longitude</td>
-                <td>${longitude}</td>
+                <td id = "longitude">${longitude}</td>
             </tr>
             <tr>
                 <td>Latitude</td>
-                <td>${latitude}</td>
+                <td id = "latitude">${latitude}</td>
+            </tr>
+            <tr>
+                    <td colspan="2">
+                        <button onclick="openGoogleMaps()">Open Google Maps</button>
+                    </td>
+                </tr>
+            <tr>
+                <td colspan="2">
+                    <button onclick="copyCoordinates()">Copy Coordinates</button>
+                </td>
             </tr>
         </tbody>
     </table>
@@ -67,6 +85,7 @@
 `
 
             document.getElementById("result").innerHTML = resultHTML
+            return latitude;
           } else {
             console.log("Siuuu")
             document.getElementById("result").innerHTML = "Location not found.";
@@ -79,4 +98,66 @@
     }
     
     
+
+
+   
+
+
+
+
+
     </script>
+
+<script>
+    function copyCoordinates() {
+        // Select the latitude and longitude values
+        latitude = document.getElementById("latitude").textContent
+        longitude = document.getElementById("longitude").textContent
+        
+        // Combine latitude and longitude into a single string
+        var coordinates = latitude + ", " + longitude;
+
+        // Create a temporary textarea element
+        var textarea = document.createElement('textarea');
+        textarea.value = coordinates;
+
+        // Append the textarea to the body
+        document.body.appendChild(textarea);
+
+        // Select the content of the textarea
+        textarea.select();
+        textarea.setSelectionRange(0, 99999); // For mobile devices
+
+        // Copy the selected text
+        document.execCommand('copy');
+
+        // Remove the textarea from the body
+        document.body.removeChild(textarea);
+
+        // Alert the user that the coordinates have been copied
+        alert("Coordinates copied: " + coordinates);
+    }
+
+</script>
+
+<script>
+
+function openGoogleMaps() {
+    
+            
+            var latitude = document.getElementById("latitude");
+            var longitude = document.getElementById("longitude");
+
+            var latitude = latitude.textContent;
+            var longitude = longitude.textContent;
+            
+
+        
+            var mapUrl = "https://www.google.com/maps?q=" + latitude + "," + longitude;
+
+  
+    window.location.href = mapUrl;
+        
+}
+
+</script>
