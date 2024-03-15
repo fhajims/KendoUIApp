@@ -26,12 +26,36 @@
             <% if (locals.data && locals.data.meals && locals.data.meals.length > 0) { %>
                 <h1>Your meal is:</h1>
                 <h2><%= locals.data.meals[0].strMeal %></h2>
-                <p><%= locals.data.meals[0].strInstructions %></p>
+                
                 <% if (locals.data.meals[0].strMealThumb) { %>
                     <img src="<%= locals.data.meals[0].strMealThumb %>" alt="<%= locals.data.meals[0].strMeal %>" />
                 <% } else { %>
                     <p>No meal image found.</p>
                 <% } %>
+                <% if (locals.data.meals[0].strArea) { %>
+                    <% console.log(locals.data.meals[0].strArea) %> 
+                    <h2> Origin:  <%=locals.data.meals[0].strArea %> <h2>
+                 <% } else { %>
+                     <p>No meal image found.</p>
+                 <% } %>
+                 <% for (let i = 1; i <= 20; i++) { %>
+                    <% if (locals.data.meals[0]['strIngredient' + i]) { %>
+                        <% console.log(locals.data.meals[0]['strIngredient' + i]) %> 
+                        <h2>  <%= locals.data.meals[0]['strMeasure' + i] %>  <%= locals.data.meals[0]['strIngredient' + i] %>  </h2>
+                    <% } else { %>
+                        <p></p>
+                    <% } %>
+                <% } %>
+                
+                <p><%= locals.data.meals[0].strInstructions %></p>
+
+                <% if (locals.data.meals[0].strYoutube) { %>
+                   <% console.log(locals.data.meals[0].strYoutube) %> 
+                   <iframe width="560" height="315" src="<%= locals.data.meals[0].strYoutube %>" frameborder="0" allowfullscreen></iframe>
+                <% } else { %>
+                    <p>No meal image found.</p>
+                <% } %>
+                
             <% } else { %>
                 <p>No meal found</p>
                 <% console.log(locals.data); %>
@@ -44,6 +68,7 @@
                 </div> 
             <% } %>
             
+            <% console.log(locals.data); %>
 
 
 
