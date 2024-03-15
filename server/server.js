@@ -58,6 +58,8 @@ app.use(LoginNameGenerator);
 //app.use(logger)
 
 
+
+
 app.post('/submit', async (req, res) => {
   // Assuming some condition here
   if (req.body["username"] == "dergeheimeuser") {
@@ -77,6 +79,32 @@ app.post('/submit', async (req, res) => {
 
 
 app.post('/upload', upload.single('uploaded_file'), function (req, res) {
+  // req.file is the name of your file in the form above, here 'uploaded_file'
+  // req.body will hold the text fields, if there were any 
+  console.log(req.file, req.body)
+});
+
+app.post('/recipes', async (req, res) => {
+  try {
+    //console.log(req.body)
+    //console.log("asdf")
+    const recipeSelection = req.body.recipeSelection
+    //console.log(recipeSelection)
+    //console.log("awfeef")
+    const response = await axios.get(
+      `https://www.themealdb.com/api/json/v1/1/search.php?s=${recipeSelection}`
+    );
+    const result = response.data;
+    // console.log(result)
+    res.render(path.join(__dirname, '../views', 'recipes.ejs'), {
+        data: result
+    });
+  } catch (error) {
+    console.error("Failed to make request halihalo", error.message);
+    res.render(path.join(__dirname, '../views', 'recipes.ejs'), {
+      error: "No Meal was found"
+    });
+  }
   // req.file is the name of your file in the form above, here 'uploaded_file'
   // req.body will hold the text fields, if there were any 
   console.log(req.file, req.body)
@@ -207,6 +235,13 @@ app.get('/contact', (req, res) => {
   console.log("hai")
   console.log(__dirname)
   res.render(path.join(__dirname, '../views', 'contact.ejs'));
+});
+
+app.get('/recipes', (req, res) => {
+  // Instead of sending "Hello World!", send the index.html file
+  console.log("hai")
+  console.log(__dirname)
+  res.render(path.join(__dirname, '../views', 'recipes.ejs'));
 });
 
 app.get('/about', (req, res) => {

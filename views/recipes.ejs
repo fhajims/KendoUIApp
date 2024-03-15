@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body>
+
+    <%- include("header.ejs")%>
+
+    <div class="center-container">
+        <div class="col-md-6">
+            <form action="/recipes" method="POST">
+                <div class="mb-3">
+                    <label for="inputField" class="form-label">Enter your data:</label>
+                    <input type="text" class="form-control" id="recipeSelection" name="recipeSelection" required>
+                    
+                </div>
+
+               
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+
+            <% if (locals.data && locals.data.meals && locals.data.meals.length > 0) { %>
+                <h1>Your meal is:</h1>
+                <h2><%= locals.data.meals[0].strMeal %></h2>
+                <p><%= locals.data.meals[0].strInstructions %></p>
+                <% if (locals.data.meals[0].strMealThumb) { %>
+                    <img src="<%= locals.data.meals[0].strMealThumb %>" alt="<%= locals.data.meals[0].strMeal %>" />
+                <% } else { %>
+                    <p>No meal image found.</p>
+                <% } %>
+            <% } else { %>
+                <p>No meal found</p>
+                <% console.log(locals.data); %>
+                <% console.log("hey"); %>
+            <% } %>
+            
+            <% if (locals.error) { %>
+                <div id="recipeoutput">
+                    <%= locals.error %>
+                </div> 
+            <% } %>
+            
+
+
+
+        </div>
+    </div>  
+
+    <script>
+    function getIngredients(meal) {
+        const ingredients = [];
+        for (let i = 1; i <= 20; i++) {
+            const ingredient = meal[`strIngredient${i}`];
+            if (ingredient) {
+                ingredients.push(ingredient);
+            } else {
+                // If an empty string, null, or undefined is encountered, stop iterating
+                break;
+            }
+        }
+        return ingredients.length > 0 ? ingredients.join(', ') : 'No ingredients available';
+    }</script>
+
+
+</body>
+</html>
