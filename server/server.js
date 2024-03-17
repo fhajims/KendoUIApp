@@ -12,6 +12,27 @@ const app = express();
 const port = 3000;
 const multer  = require('multer')
 const pg = require('pg')
+const session = require('express-session');
+const crypto = require('crypto');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
+
+//console.log(path.join(__dirname, '..'));
+//console.log(process.env);
+//const rootDir = path.join(__dirname, '..');
+//console.log("schniibbiasdbfp")
+//console.log(rootDir);
+//env.config()
+
+//console.log('SESSION_SECRET:', process.env);
+
+
+//const secretKey = crypto.randomBytes(32).toString('hex');
+//console.log('Generated secret key:', secretKey);
+//const hmac = crypto.createHmac('sha256', secretKey);
+//console.log('Generated secret key:', hmac);
+//hmac.update(data);
+//const digest = hmac.digest('hex');
+//console.log('HMAC:', digest);
 
 const db = new pg.Client({
   user: "postgres",
@@ -21,7 +42,26 @@ const db = new pg.Client({
   password: "postgres",
   port: 5432
 })
+
+app.use(bodyParser.urlencoded({extended: true}));
 db.connect();
+
+
+app.set('view engine', 'ejs');
+const upload = multer({ dest: './public/data/uploads/' })
+const authRoutes = require('../routes/auth.js');
+
+app.use('/auth', authRoutes);
+
+app.use(session({
+  secret: process.env.SECRET,
+  resave: false,
+  saveUninitialized: false
+}));
+
+
+
+
 
 /*
 const storage = multer.diskStorage({
@@ -38,9 +78,9 @@ const upload = multer({ storage: storage });
 
 
 
-app.set('view engine', 'ejs');
 
-const upload = multer({ dest: './public/data/uploads/' })
+
+
 
 /*function LoginName(req, res, next) {
   console.log(req.body);
@@ -54,7 +94,7 @@ const upload = multer({ dest: './public/data/uploads/' })
 } */
 
 //app.use(morgan("tiny"));
-app.use(bodyParser.urlencoded({extended: true}));
+
 
 function LoginNameGenerator (req, res, next) {
   console.log(req.body);
@@ -528,3 +568,8 @@ app.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
 
+
+
+app.use((req, res, next) => {
+  res.status(404).json({ message: 'Route not found' });
+});
