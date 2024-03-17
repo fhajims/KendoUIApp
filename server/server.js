@@ -89,6 +89,62 @@ app.post('/submit', async (req, res) => {
 
 */
 
+app.post('/addRecipes', async (req, res) => {
+
+  
+
+  console.log(req.body)
+  const {title, description, instructions, username} = req.body
+  console.log(title)
+
+  try {
+
+  const userResult = await db.query(
+    `SELECT *
+    FROM cookalicious.recipes
+    WHERE user_id = $1`,
+    [username]
+  );
+  console.log(userResult.rows)
+  if (userResult.rows.length === 0) {
+    return res.status(400).send("Post has failed");
+  }
+
+} catch(error) {
+  return res.status(500).send('Error occurred during recipe addition.')
+}
+
+  const checkResult = await db.query(
+    `SELECT *
+    FROM cookalicious.recipes u
+    INNER JOIN cookalicious.recipes r ON r.user_id = $1`,
+    [username]
+  );
+
+  console.log(checkResult);
+  console.log(title, description, instructions, username)
+  try {
+    
+    const result = await db.query(
+      "INSERT INTO cookalicious.recipes (title, description, instructions, user_id) VALUES ($1, $2, $3, $4)",
+      [title, description, instructions, username]
+     
+    );
+    res.render(path.join(__dirname, '../views', 'myrecipes.ejs'), {
+      data: { title, description, instructions }
+    });
+  } catch (error) {
+    console.error('Error executing query:', error);
+    res.status(500).send('Error occurred during registration.');
+  }
+
+  return res.render(path.join(__dirname, '../views', 'myrecipes.ejs'), { data: { title, description, instructions }});
+
+});
+
+
+
+
 app.post('/login', async (req, res) => {
   const username = req.body.username
   console.log(username)
@@ -134,9 +190,10 @@ app.post('/myrecipes', upload.single('uploaded_file'), function (req, res) {
 
 
 
+
 app.post('/recipes', async (req, res) => {
   try {
-    //console.log(req.body)
+    console.log(req.body)
     //console.log("asdf")
     const recipeSelection = req.body.recipeSelection
     //console.log(recipeSelection)
@@ -145,7 +202,9 @@ app.post('/recipes', async (req, res) => {
       `https://www.themealdb.com/api/json/v1/1/search.php?s=${recipeSelection}`
     );
     const result = response.data;
-    // console.log(result)
+     //console.log(result)
+     console.log("HERE IS THE BREAK")
+    
     res.render(path.join(__dirname, '../views', 'recipes.ejs'), {
         data: result
     });
@@ -157,7 +216,7 @@ app.post('/recipes', async (req, res) => {
   }
   // req.file is the name of your file in the form above, here 'uploaded_file'
   // req.body will hold the text fields, if there were any 
-  console.log(req.file, req.body)
+  
 });
 
 
