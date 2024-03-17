@@ -1,0 +1,30 @@
+SELECT * FROM cookalicious.users
+ORDER BY id ASC 
+
+
+SET search_path TO cookalicious
+
+select * from users;
+
+delete from users;
+drop table users;
+
+
+Create table users(
+id serial primary key,
+username varchar(100) not null unique, 
+email varchar(100) not null unique,
+password varchar(100),
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)
+
+
+CREATE TABLE cookalicious.users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(100) NOT NULL UNIQUE, 
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(100),
+    firstname VARCHAR(100),
+    lastname VARCHAR(100),
+    telephonenumber VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
